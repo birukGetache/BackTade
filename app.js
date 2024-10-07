@@ -18,7 +18,7 @@ const Transaction = require('./model/Transaction');
 const { body, validationResult } = require('express-validator');
 const app = express();
 const PORT = process.env.PORT || 4000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/Tade';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://burab1742:ACtDMvExsvzY2w2J@cluster0.s1mvg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 const uploadPath = path.join(__dirname, 'uploads');
 
 // Middleware
@@ -1183,6 +1183,7 @@ app.use((err, req, res, next) => {
 
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('Server is running on http://0.0.0.0:4000');
 });
+
