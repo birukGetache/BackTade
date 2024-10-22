@@ -1148,6 +1148,7 @@ app.post('/salesTransaction', async (req, res)  =>{
   try{
   const sales = await new SalesCosmo(req.body);
   sales.save();
+      res.status(200).send({ message: 'Transaction recorded' });
   }
   catch(error){
     console.error(error)
