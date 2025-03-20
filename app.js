@@ -177,7 +177,7 @@ app.post('/saled/:totalSales', async (req, res) => {
     console.log("Received sales:", salesValue);
 
     // Check if sales for today already exist
-    let existingSale = await SchemaTotalSales.findOne({
+    let existingSale = await totalSale.findOne({
       sentDate: { 
         $gte: today, 
         $lt: new Date(today.getTime() + 86400000) // End of today
@@ -191,7 +191,7 @@ app.post('/saled/:totalSales', async (req, res) => {
       res.status(200).json({ message: 'Sales updated successfully', totalSales: existingSale.totleSale });
     } else {
       // Create a new sales record for today
-      const newSale = new SchemaTotalSales({ totleSale: salesValue });
+      const newSale = new totalSale({ totleSale: salesValue });
       await newSale.save();
       res.status(201).json({ message: 'Sales saved successfully', totalSales: newSale.totleSale });
     }
