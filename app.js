@@ -170,14 +170,31 @@ app.delete('/medicines/:id', async (req, res) => {
 
 app.post('/saled/:totalSales', async (req, res) => {
   try {
-    const salesValue = req.params.totalSales;
-    console.log("Received sales:", salesValue);
-    
-    // Assuming `totalSale` is a Mongoose model
-    const newSale = new totalSale({ totleSale: salesValue });
-    await newSale.save(); // Save the new sale
+    const salesValue = Number(req.params.totalSales);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to the start of the day
 
-    res.status(201).json({ message: 'Sales saved successfully' });
+    console.log("Received sales:", salesValue);
+
+    // Check if sales for today already exist
+    let existingSale = await SchemaTotalSales.findOne({
+      sentDate: { 
+        $gte: today, 
+        $lt: new Date(today.getTime() + 86400000) // End of today
+      }
+    });
+
+    if (existingSale) {
+      // Update the existing sales record
+      existingSale.totleSale += salesValue;
+      await existingSale.save();
+      res.status(200).json({ message: 'Sales updated successfully', totalSales: existingSale.totleSale });
+    } else {
+      // Create a new sales record for today
+      const newSale = new SchemaTotalSales({ totleSale: salesValue });
+      await newSale.save();
+      res.status(201).json({ message: 'Sales saved successfully', totalSales: newSale.totleSale });
+    }
   } catch (error) {
     console.error("Error saving sales:", error);
     res.status(500).json({ error: 'An error occurred while saving sales' });
